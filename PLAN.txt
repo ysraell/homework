@@ -1,0 +1,10 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+The multilinear methods are: MDA, MDA with MSD, with and without direct soluction (DMDA). The linear methods are: PCA, LDA and DLDA (with and without MSD), SVM, SMIJ.
+
+The datasets are: A) 3D interpoled and normalize motion of the all jonits; B) the 2D version of the A (Ofli et all, 2014) and C) the same B but with all angles avaliable combining the 31 joints coordinates (totaling 13.485 different angles). In all cases, it is applied a normaliation in [-1, 1] and a interpolation to fit the frames to 460. The number of frames is 276.5863 +- 184.0253, (min/max 56/901), it is good to use 276+184 to preserve, in general, the rank of the samples. In this way, the exactaly rank is preserved in 84,74% of the total samples. Preserving
+% 90.41% of the total frames. Using sum((x<=460).*x+(x>460).*460)/sum(x) = 90.41%, if x is a vector with the number of total frames for each sample.
+
+
+For each method anda dataset: variate apriori dimensionality reduction (E1), variate aposteriori dimensionality reduction using representativite criterion (E2). Using the samples from the combination of different actors in training and test steps (A) and randonly separation of the samples (R). In the test step using 3rd-order representation is used 1-NN for classification, with the fallow metrics: Norm-2, Frobenius and Structural Similarity Index (SSIM).
