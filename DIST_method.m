@@ -11,7 +11,7 @@ function [DIST] = DIST_method(A,B,dist_method_type)
             else
                 DIST = norm(A-B,2);
             end
-        case 'm'
+        case 'o'
             [l,c,p] = size(A);
             if p>1
                 DIST = normcpp(reshape(A-B,l,c*p));
@@ -24,7 +24,7 @@ function [DIST] = DIST_method(A,B,dist_method_type)
             DIST = frobcpp(A-B);
         case 's'
             DIST = (1-ssim(A,B))/2;
-        case 'o'
+        case 'r'
             [l,c,p] = size(A);
             if p>1
                 DIST = (1-ssimcpp(reshape(A,l,c*p),reshape(B,l,c*p)))/2;

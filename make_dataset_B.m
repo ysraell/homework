@@ -3,7 +3,7 @@ close all
 clc
 
 % Path to database
-data = 'data';
+data = '/home/israel/Documents/actions_app/Datasets_actions/HDM05';
 
 % Path to data for each class
 
@@ -23,10 +23,8 @@ path{11} = 'depositFloorR';
 % Total classes
 N = max(size(path));
 
-% number_of_frames = 276.5863 +- 184.0253, (min/max 56/901), it is good to
-% use 276+184. The rank of the sample, in general, is preserved. Preserving
-% 90.41% of the total frames. (using sum((x<461).*x+(x>460).*460)/sum(x)).
-tamanho_sinal=460;
+% number_of_frames = 200, like other authors
+tamanho_sinal=200;
 
 
 trajectories = [];
@@ -117,9 +115,7 @@ for Ni=1:N
     end
 end
 
-trajectories_B = trajectories;
-atores_B = atores;
-cont_B = cont;
+set_str = 'B';
 
-save dataset_B.mat trajectories_B atores_B cont_B
+save dataset_B.mat trajectories atores cont set_str
 

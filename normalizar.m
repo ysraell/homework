@@ -1,4 +1,11 @@
-function res=normalizar(entrada)
-    sinal=entrada;
-    res=(sinal-min(min(sinal)))/(max(max(sinal))-min(min(sinal)));
+function res=normalizar(sinal)
+    
+    T = max(sinal(:))-min(sinal(:));
+
+    if abs(T)>eps
+        res=(sinal-min(sinal(:)))/T;
+    else
+        res=(sinal-min(sinal(:)));
+    end
+    
 end

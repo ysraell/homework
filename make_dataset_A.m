@@ -3,7 +3,7 @@ close all
 clc
 
 % Path to database
-data = 'data';
+data = '/home/israel/Documents/actions_app/Datasets_actions/HDM05';
 
 % Path to data for each class
 
@@ -67,9 +67,10 @@ for Ni=1:N
     end
 end
 
-trajectories_A = trajectories;
-atores_A = atores;
-cont_A = cont;
+set_str = 'A';
 
-save dataset_A.mat trajectories_A atores_A cont_A
+save dataset_A.mat trajectories atores cont set_str
+
+
+%EOF
 
