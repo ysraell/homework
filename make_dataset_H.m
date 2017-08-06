@@ -1,9 +1,9 @@
-clear all
-close all
-clc
+%  clear all
+%  close all
+%  clc
 
 % Path to database
-data = '/home/israel/Documents/Datasets_actions/MSRA3D/MSRAction3D/MS2';
+data = '/home/israel/Documents/actions_app/Datasets_actions/MSRA3D/MSRAction3D/MS2';
 
 % Total classes
 N = 20;
@@ -12,15 +12,15 @@ Rep = 3;
 
 
 
-% number_of_frames = 276.5863 +- 184.0253, (min/max 56/901), it is good to
-% use 276+184. The rank of the sample, in general, is preserved. Preserving
+% number_of_frames = 39.7681 +- 10.0809, (min/max 20/76), it is good to
 % 90.41% of the total frames. (using sum((x<461).*x+(x>460).*460)/sum(x)).
-tamanho_sinal=460;
+tamanho_sinal=50;
 
 trajectories = [];
 atores = [];
 missing_files = [];
 missing_count = 0;
+cont=0;
 for n=1:N;
     sample=0;
     sample_temp = [];
@@ -31,12 +31,14 @@ for n=1:N;
             filename = strcat(data,'/a',num2str(n,'%02i'),'_s',num2str(a,'%02i'),'_e',num2str(r,'%02i'),'_skeleton.txt');
             
             if exist(filename,'file')
-                fprintf('Generating sample %d for class %d.\n',sample,n)
+                cont=cont+1;
+                fprintf('H) Generating sample %d for class %d.\n',sample,n)
                 
                 Temp = load(filename);
                 [l,c] = size(Temp);
                 Temp = reshape(Temp,20,l/20,4);
                 Temp = Temp(:,:,1:3);
+                Size(cont) = max(size(Temp));
                 
                 temp_traj = zeros(20,tamanho_sinal,3);
                 for j=1:20
@@ -58,10 +60,8 @@ for n=1:N;
     end
 end
 
-trajectories_H = trajectories;
-atores_H = atores;
-cont_H = Atores*N*Rep-missing_count;
+set_str = 'H';
 
-save dataset_H.mat trajectories_H atores_H cont_H
+save dataset_H.mat trajectories atores cont set_str
 
 

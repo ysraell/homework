@@ -1,24 +1,25 @@
-clear all
-close all
-clc
+%  clear all
+%  close all
+%  clc
 
 % Path to database
-data = '/home/israel/Documents/Datasets_actions/BMHAD/BerkeleyMHAD/Accelerometer';
+data = '/home/israel/Documents/actions_app/Datasets_actions/BMHAD/BerkeleyMHAD/Accelerometer';
 
 % Total classes
 N = 12;
 Atores = 11;
 Rep = 5;
 
-% number_of_frames = 276.5863 +- 184.0253, (min/max 56/901), it is good to
-% use 276+184. The rank of the sample, in general, is preserved. Preserving
+% number_of_frames = 231 +- 163.2, (min/max 26/941), it is good to
 % 90.41% of the total frames. (using sum((x<461).*x+(x>460).*460)/sum(x)).
-tamanho_sinal=100;
+tamanho_sinal=400;
+
 
 trajectories = [];
 atores = [];
 missing_files = [];
 missing_count = 0;
+cont=0;
 for n=1:N;
     sample=0;
     sample_temp = [];
@@ -30,7 +31,7 @@ for n=1:N;
             end
             
             if exist(filename{1},'file')
-                fprintf('C) Generating sample %d for class %d.\n',sample,n)
+                fprintf('I) Generating sample %d for class %d.\n',sample,n)
                 TempA = [];
                 c = Inf;
                 for s=1:6
@@ -44,7 +45,9 @@ for n=1:N;
                         TempA{4}(1,1:c,1:3); ...
                         TempA{5}(1,1:c,1:3); ...
                         TempA{6}(1,1:c,1:3)];
-                
+                cont=cont+1;
+                Size(cont) = max(size(Temp));
+                    
                 temp_traj = zeros(6,tamanho_sinal,3);
                 for j=1:6
                     for i=1:3
@@ -65,10 +68,9 @@ for n=1:N;
     end
 end
 
-trajectories_I = trajectories;
-atores_I = atores;
-cont_I = Atores*N*Rep-missing_count;
 
-save dataset_I.mat trajectories_I atores_I cont_I
+set_str = 'I';
+
+save dataset_I.mat trajectories atores cont set_str
 
 

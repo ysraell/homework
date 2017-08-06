@@ -1,20 +1,19 @@
-clear all
-close all
-clc
+% clear all
+% close all
+% clc
 
 % Path to database
-data = '/home/israel/Documents/Datasets_actions/BMHAD/BerkeleyMHAD/Mocap/OpticalData';
+data = '/home/israel/Documents/actions_app/Datasets_actions/BMHAD/BerkeleyMHAD/Mocap/OpticalData';
 
 % Total classes
 N = 12;
 Atores = 11;
 Rep = 5;
 
+% number_of_frames = 3602.91 -+2510.94, (min/max 774/14567), it is good to
+% 90.17% of the total frames. (using sum((x<461).*x+(x>460).*460)/sum(x)).
+tamanho_sinal=6100;
 
-% number_of_Erames = 276.5863 +- 184.0253, (min/max 56/901), it is good to
-% use 276+184. The rank of the sample, in general, is preserved. Preserving
-% 90.41% of the total frames. (using sum((x<461).*x+(x>460).*460)/sum(x)).
-tamanho_sinal=200;
 
 trajectories = [];
 atores = [];
@@ -29,7 +28,7 @@ for n=1:N;
             filename = strcat(data,'/moc_s',num2str(n,'%02i'),'_a',num2str(a,'%02i'),'_r',num2str(r,'%02i'),'.txt');
             
             if exist(filename,'file')
-                fprintf('C) Generating sample %d for class %d.\n',sample,n)
+                fprintf('E) Generating sample %d for class %d.\n',sample,n)
                 Temp = load(filename);
                 Temp = Temp(:,1:end-2);
                 temp_traj = zeros(43,tamanho_sinal,3);
@@ -102,10 +101,9 @@ for n=1:N;
     end
 end
 
-trajectories_E = trajectories;
-atores_E = atores;
-cont_E = Atores*N*Rep-missing_count;
 
-save dataset_E.mat trajectories_E atores_E cont_E
+set_str = 'D';
+
+save dataset_D.mat trajectories atores cont set_str
 
 

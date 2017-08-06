@@ -6,14 +6,10 @@
 
 
 
-disp('Creating dataset A...')
-run make_dataset_A.m
-disp('Creating done.')
+S_set = dir('make_dataset_*.m');
+T_sets = max(size(S_set));
 
-disp('Creating dataset B...')
-run make_dataset_B.m
-disp('Creating done.')
-
-disp('Creating dataset C...')
-run make_dataset_C.m
-disp('Creating done.')
+for n=1:T_sets
+    clearvars -except n S_set T_sets
+    run(S_set(n).name);
+end

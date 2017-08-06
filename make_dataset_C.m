@@ -1,9 +1,9 @@
-clear all
-close all
-clc
+% clear all
+% close all
+% clc
 
 % Path to database
-data = 'data';
+data = '/home/israel/Documents/actions_app/Datasets_actions/HDM05';
 
 % Path to data for each class
 
@@ -26,7 +26,7 @@ N = max(size(path));
 % number_of_frames = 276.5863 +- 184.0253, (min/max 56/901), it is good to
 % use 276+184. The rank of the sample, in general, is preserved. Preserving
 % 90.41% of the total frames. (using sum((x<461).*x+(x>460).*460)/sum(x)).
-tamanho_sinal=100;
+tamanho_sinal=460;
 
 
 trajectories = [];
@@ -117,9 +117,7 @@ for Ni=1:N
     end
 end
 
-trajectories_C = trajectories;
-atores_C = atores;
-cont_C = cont;
+set_str = 'C';
 
-save dataset_C.mat trajectories_C atores_C cont_C
+save dataset_C.mat trajectories atores cont set_str
 

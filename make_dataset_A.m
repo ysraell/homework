@@ -1,6 +1,6 @@
-clear all
-close all
-clc
+% clear all
+% close all
+% clc
 
 % Path to database
 data = '/home/israel/Documents/actions_app/Datasets_actions/HDM05';
