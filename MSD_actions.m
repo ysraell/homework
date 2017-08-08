@@ -5,7 +5,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [R_MSD,MC_MSD,num_max,E_MSD] = MSD_actions(trajectories,test_samples,training_samples,dist_method_type,dim_opt_proj,Dim,r,T_max,tolerancia,zeta)
+function [R_MSD,MC_MSD,num_max,E_MSD] = MSD_actions(trajectories,test_samples,training_samples,dist_method_type,dim_opt_proj,Dim,r,zeta,T_max,tolerancia)
 
     % Total classes
     N = max(size(trajectories));
@@ -41,18 +41,18 @@ function [R_MSD,MC_MSD,num_max,E_MSD] = MSD_actions(trajectories,test_samples,tr
         end
         
          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 1-mode
-        [aUl,Ll] = subspace_proj_MSD(training_samples,trajectories_proj,N,l,c*p,1,zeta(1));
+        [aUl,Ll] = subspace_proj_MSD(training_samples,trajectories_proj,N,l,c*p,1,zeta);
 
 
         if (dim_opt_proj>1)
             
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2-mode
-            [aUc,Lc] = subspace_proj_MSD(training_samples,trajectories_proj,N,c,l*p,2,zeta(2));
+            [aUc,Lc] = subspace_proj_MSD(training_samples,trajectories_proj,N,c,l*p,2,zeta);
 
-            if (dim_opt_proj>2)
+            if (dim_opt_proj>2)&&(p>2)
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3-mode
-                [aUp,Lp] = subspace_proj_MSD(training_samples,trajectories_proj,N,p,l*c,3,zeta(3));
+                [aUp,Lp] = subspace_proj_MSD(training_samples,trajectories_proj,N,p,l*c,3,zeta);
 
             end
         end   

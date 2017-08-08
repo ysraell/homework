@@ -12,25 +12,24 @@ function [R_DMSD,MC_DMSD,num_max] = DMSD_actions(trajectories,test_samples,train
     
     Uc =eye(c,c);
     Up =eye(p,p);
-    aUc =eye(c,c);
-    aUp =eye(p,p);
+
     num_max = zeros(p,2);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Training step.
     
     if (dim_opt_proj>0)
          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 1-mode
-        [Ul,num_max(1,:)] = subspace_proj_DMSD(training_samples,trajectories,N,l,c*p,1,Dim,r,zeta(1));
+        [Ul,num_max(1,:)] = subspace_proj_DMSD(training_samples,trajectories,N,l,c*p,1,Dim,r,zeta);
 
         if (dim_opt_proj>1)
             
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2-mode
-            [Uc,num_max(2,:)] = subspace_proj_DMSD(training_samples,trajectories,N,c,l*p,2,Dim,r,zeta(2));
+            [Uc,num_max(2,:)] = subspace_proj_DMSD(training_samples,trajectories,N,c,l*p,2,Dim,r,zeta);
 
-            if (dim_opt_proj>2)
+            if (dim_opt_proj>2)&&(p>2)
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3-mode
-                [Up,num_max(3,:)] = subspace_proj_DMSD(training_samples,trajectories,N,p,l*c,3,Dim,r,zeta(3));
+                [Up,num_max(3,:)] = subspace_proj_DMSD(training_samples,trajectories,N,p,l*c,3,Dim,r,zeta);
 
             end
         end

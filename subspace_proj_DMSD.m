@@ -31,20 +31,37 @@ function [U,num_max] = subspace_proj_DMSD(training_samples,trajectories,N,l,c,mo
         end
         clear A
     
-        if (zeta==-1) 
-            zeta = max(eig(Sb/Sw));
+        switch zeta
+            case 1
+                zb = max(eig(Sb/(Sw+eye(l))));
+                zw=1;
+            case 2
+                zb = max(eig(Sb));
+                zw=1;
+            case 3
+                zb = max(eig(Sw));
+                zw=1;
+            case 4
+                zb = max(eig(Sw));
+                zw=1;
+                Sw = Sw./frob(Sw);
+                Sb = Sw./frob(Sb);
+            case 5
+                zb = 10;
+                zw = 1;
+                Sw = Sw./frob(Sw);
+                Sb = Sw./frob(Sb);
+            case 6
+                zb = 10;
+                zw = 0;
+                Sb = Sw./frob(Sb);
+            otherwise
+                zb = frob(Sw);
+                zw = 1;
         end
-        
-        if (zeta==-2) 
-            zeta = max(eig(Sb));
-        end
-        
-        if (zeta==-3) 
-            zeta = max(eig(Sw));
-        end        
         
 
-        [V,L] = eig(zeta.*Sb - Sw);
+        [V,L] = eig(zb.*Sb - zw.*Sw);
         [L,I] = sort(diag((L)),'descend');
         V = V(:,I);
         
