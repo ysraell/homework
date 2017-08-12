@@ -13,14 +13,11 @@ clear all
 clc
 w = warning ('off','all');
 
-%% Balance
-% balance of samples for test: bal*Total_samples for each classe for test
-% and (1-bal)*Total_samples for trainning.
-bal = [0.5 0.7];
+%% Balance authors
+% how much for training
+bal = [2 3];
 
-%% Experiment random samples, mix actors
-T_rounds = 2;
-
+%% data
 % Dim = [0.9 0.99 1-4.50359962738.*eps*10.^[12 11 10 9 8 7 6 5 4 3]]';
 % Dim = [0.1:0.05:0.95 0.99 0.999 0.9999];
 Dim = [0.1 0.2];
@@ -49,8 +46,9 @@ T_proj = max(size(dim_opt_proj));
 
 %% Experiments
 
-D_sets = dir('dataset_*.mat');
+D_sets = dir('dataset_D.mat');
 T_sets = max(size(D_sets));
+% T_sets = 3;
 
 for n=1:T_sets
     load(D_sets(n).name)
@@ -58,11 +56,12 @@ for n=1:T_sets
     [~,~,p_dim] = size(trajectories{1}{1});
 
     for b=1:T_bal
-
+        
+        [test_a,training_a,T_rounds] = gen_comb_authors(bal(b),atores);
         R = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_rounds,T_bal);
         T = zeros(T_proj,T_z,T_rr,T_d,T_rounds,T_bal);
         for r=1:T_rounds
-            [test_samples,training_samples,test_count,training_count] = gen_round_rand_balance(trajectories,bal(b));
+            [test_samples,training_samples,test_count,training_count] = gen_by_authors(trajectories,atores,test_a(r,:),training_a(r,:));
             for d=1:T_d
                 for rri=1:T_rr
                     for zi=1:T_z

@@ -1,4 +1,5 @@
-function [U,num_max] = subspace_proj_DMDA(training_samples,trajectories,N,l,c,mode,Dim,r,zeta)
+function [U,L] = subspace_proj_MDA(training_samples,trajectories,N,l,c,mode,zeta)
+
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% n-mode
 
@@ -30,7 +31,7 @@ function [U,num_max] = subspace_proj_DMDA(training_samples,trajectories,N,l,c,mo
             end
         end
         clear A
-    
+
         switch zeta
             case 1
                 Sw = Sw+eye(l);
@@ -45,36 +46,27 @@ function [U,num_max] = subspace_proj_DMDA(training_samples,trajectories,N,l,c,mo
                 z=1;
             case 4
                 Sw = Sw./frob(Sw);
-                Sb = Sb./frob(Sb);
-                z=10;
+                Sb = Sw./frob(Sb);
+                z=1;
             case 5
-                Sw = Sw./frob(Sw)+eye(l);
-                Sb = Sb./frob(Sb);
-                z=10;
+                Sw = Sw./frob(Sw);
+                Sb = Sw./frob(Sb);
+                z=1;
             case 6
-                Sw = Sw./frob(Sw)+eye(l);
-                Sb = Sb./frob(Sb);
-                z=100;
+                Sw = Sw./frob(Sw);
+                Sb = Sw./frob(Sb);
+                z=1;
             otherwise
                 z=1;
         end
         
 
-        [V,L] = eig(z.*Sb/Sw);
-        [L,I] = sort(diag((L)),'descend');
-        V = V(:,I);
+        [U,L] = eig(z.*Sb/Sw);
         
-        if r==0
-            ls = max([round(Dim*l) 2]);
-            U = V(:,1:ls);
-            num_max = [-1 -1];
-        else
-            num_max = max([find(cumsum(L)/sum(L)<=Dim, 1, 'last' ) 2]).*[1 1/l];
-            U = V(:,1:num_max(1));
-        end
 end
 
-% function [U,num_max] = subspace_proj_DMDA(training_samples,trajectories,N,l,c,mode,Dim,r,adjust)
+
+% function [U,L] = subspace_proj_MDA(training_samples,trajectories,N,l,c,mode,adjust)
 % 
 %         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% n-mode
 % 
@@ -107,7 +99,6 @@ end
 %         end
 %         clear A
 % 
-% 
 %         if adjust
 %             Sb = Sb./frob(Sb)+eye(l*c);
 %             Sw = Sw./frob(Sw)+eye(l*c);
@@ -115,22 +106,7 @@ end
 %             Sb = Sb./frob(Sb);
 %             Sw = Sw./frob(Sw);
 %         end
-%         [L,V] = eig(Sb/Sw);
-% %         [L,V] = eig(Sb*pinv(Sw));
-%         [L,I] = sort(diag((L)),'descend');
-%         V = V(:,I);
-%         I_min = find(L<inf, 1 );
-%         L = L(I_min:end);
-%         V = V(:,I_min:end);
-%         I_max = find(L>-Inf, 1, 'last' );
-%         L = L(1:I_max);
-%         V = V(:,1:I_max); 
-%         if r==0
-%             ls = max([round(Dim*l) 2]);
-%             U = V(:,1:ls);
-%             num_max = [-1 -1];
-%         else
-%             num_max = max([find(cumsum(L)/sum(L)<=Dim, 1, 'last' ) 2]).*[1 1/l];
-%             U = V(:,1:num_max(1));
-%         end
+%         [U,L] = eig(Sb/Sw);
+% %         [U,L] = eig(Sb*pinv(Sw));
+%         
 % end

@@ -5,7 +5,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [R_MDA,MC_MDA,num_max,E_MDA] = MDA_actions(trajectories,test_samples,training_samples,dist_method_type,dim_opt_proj,Dim,r,T_max,tolerancia)
+function [R_MDA,MC_MDA,num_max,E_MDA] = MDA_actions(trajectories,test_samples,training_samples,dist_method_type,dim_opt_proj,Dim,r,zeta,T_max,tolerancia)
 
     N = max(size(trajectories));
     
@@ -40,18 +40,18 @@ function [R_MDA,MC_MDA,num_max,E_MDA] = MDA_actions(trajectories,test_samples,tr
         end
 
          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 1-mode
-        [aUl,Ll] = subspace_proj_MDA(training_samples,trajectories_proj,N,l,c*p,1);
+        [aUl,Ll] = subspace_proj_MDA(training_samples,trajectories_proj,N,l,c*p,1,zeta);
 
 
         if (dim_opt_proj>1)
             
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2-mode
-            [aUc,Lc] = subspace_proj_MDA(training_samples,trajectories_proj,N,c,l*p,2);
+            [aUc,Lc] = subspace_proj_MDA(training_samples,trajectories_proj,N,c,l*p,2,zeta);
 
-            if (dim_opt_proj>2)
+            if (dim_opt_proj>2)&&(p>1)
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 3-mode
-                [aUp,Lp] = subspace_proj_MDA(training_samples,trajectories_proj,N,p,l*c,3);
+                [aUp,Lp] = subspace_proj_MDA(training_samples,trajectories_proj,N,p,l*c,3,zeta);
 
             end
         end   

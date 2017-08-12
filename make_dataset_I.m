@@ -24,6 +24,7 @@ for n=1:N;
     sample=0;
     sample_temp = [];
     for a=1:Atores
+        atores_temp = [];
         for r=1:Rep
             
             for s=1:6
@@ -57,6 +58,7 @@ for n=1:N;
 
                 sample=sample+1;
                 sample_temp = [sample_temp sample];
+                atores_temp = [atores_temp sample];
                 trajectories{n}{sample} = temp_traj;
             else
                 missing_count=missing_count+1;
@@ -64,7 +66,7 @@ for n=1:N;
             end
 
         end
-        atores{a}{n} = sample_temp;
+        atores{a}{n} = atores_temp;
     end
 end
 

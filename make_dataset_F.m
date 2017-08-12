@@ -24,6 +24,7 @@ for n=1:N;
     sample=0;
     sample_temp = [];
     for a=1:Atores
+        atores_temp =[];
         for r=1:Rep
             
             filename = strcat(data,'/moc_s',num2str(n,'%02i'),'_a',num2str(a,'%02i'),'_r',num2str(r,'%02i'),'.txt');
@@ -42,6 +43,7 @@ for n=1:N;
 
                 sample=sample+1;
                 sample_temp = [sample_temp sample];
+                atores_temp = [atores_temp sample];
                 trajectories{n}{sample} = temp_traj;
             else
                 missing_count=missing_count+1;
@@ -49,7 +51,7 @@ for n=1:N;
             end
 
         end
-        atores{a}{n} = sample_temp;
+        atores{a}{n} = atores_temp;
     end
 end
 
