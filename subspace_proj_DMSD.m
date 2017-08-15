@@ -33,31 +33,32 @@ function [U,num_max] = subspace_proj_DMSD(training_samples,trajectories,N,l,c,mo
     
         switch zeta
             case 1
-                zb = max(eig(Sb/(Sw+eye(l))));
-                zw=1;
+                zb = max(eig(Sw));
+                zw = 1;
             case 2
-                zb = max(eig(Sb));
-                zw=1;
+                Sw = Sw./frob(Sw);
+                Sb = Sb./frob(Sb);
+                zw = 1;
+                zb = 10;
             case 3
-                zb = max(eig(Sw));
-                zw=1;
+                Sw = Sw./frob(Sw);
+                Sb = Sb./frob(Sb);
+                zw = 1;
+                zb = 100;
             case 4
-                zb = max(eig(Sw));
-                zw=1;
                 Sw = Sw./frob(Sw);
-                Sb = Sw./frob(Sb);
+                Sb = Sb./frob(Sb);
+                zw = 1;
+                zb = 1000;
             case 5
-                zb = 10;
                 zw = 1;
-                Sw = Sw./frob(Sw);
-                Sb = Sw./frob(Sb);
+                zb = 10;
             case 6
-                zb = 10;
-                zw = 0;
-                Sb = Sw./frob(Sb);
-            otherwise
-                zb = frob(Sw);
                 zw = 1;
+                zb = 100;
+            otherwise
+                zw = 1;
+                zb = 1000;
         end
         
 
