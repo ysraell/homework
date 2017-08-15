@@ -21,7 +21,6 @@ missing_Eiles = [];
 missing_count = 0;
 for n=1:N;
     sample=0;
-    sample_temp = [];
     for a=1:Atores
         atores_temp = [];
         for r=1:Rep
@@ -90,7 +89,6 @@ for n=1:N;
             end % fim i
 
                 sample=sample+1;
-                sample_temp = [sample_temp sample];
                 atores_temp = [atores_temp sample];
                 trajectories{n}{sample} = matriz_Ang;
             else

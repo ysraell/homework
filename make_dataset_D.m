@@ -12,7 +12,8 @@ Rep = 5;
 
 % number_of_frames = 3602.91 -+2510.94, (min/max 774/14567), it is good to
 % 90.17% of the total frames. (using sum((x<461).*x+(x>460).*460)/sum(x)).
-tamanho_sinal=6100;
+% tamanho_sinal=6100; 4148611952 B ~ 4 GB
+tamanho_sinal = 1000;
 
 trajectories = [];
 atores = [];
