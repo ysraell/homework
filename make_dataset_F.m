@@ -26,7 +26,7 @@ for n=1:N;
         atores_temp =[];
         for r=1:Rep
             
-            filename = strcat(data,'/moc_s',num2str(n,'%02i'),'_a',num2str(a,'%02i'),'_r',num2str(r,'%02i'),'.txt');
+            filename = strcat(data,'/moc_s',num2str(a,'%02i'),'_a',num2str(n,'%02i'),'_r',num2str(r,'%02i'),'.txt');
             
             if exist(filename,'file')
                 cont=cont+1;

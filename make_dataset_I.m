@@ -27,7 +27,7 @@ for n=1:N;
         for r=1:Rep
             
             for s=1:6
-                filename{s} = strcat(data,'/Shimmer',num2str(s,'%02i'),'/acc_h',num2str(s,'%02i'),'_s',num2str(n,'%02i'),'_a',num2str(a,'%02i'),'_r',num2str(r,'%02i'),'.txt');
+                filename{s} = strcat(data,'/Shimmer',num2str(s,'%02i'),'/acc_h',num2str(s,'%02i'),'_s',num2str(a,'%02i'),'_a',num2str(n,'%02i'),'_r',num2str(r,'%02i'),'.txt');
             end
             
             if exist(filename{1},'file')
