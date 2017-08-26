@@ -9,7 +9,8 @@
 S_set = dir('make_dataset_*.m');
 T_sets = max(size(S_set));
 
-for n=[4 9]
+for n=[1 2 3 4 5 6 7 8 9]
     clearvars -except n S_set T_sets
     run(S_set(n).name);
 end
+

@@ -1,7 +1,7 @@
-function [test_,training_,T_rounds_] = gen_comb_authors(n_training,autores)
+function [test_,training_,T_rounds_] = gen_comb_authors(n_training,atores)
 
    
-    NA = max(size(autores));
+    NA = max(size(atores));
     training = combnk([1:NA],n_training);
     T_rounds = size(training,1);
     n_test = NA-n_training;
@@ -19,8 +19,8 @@ function [test_,training_,T_rounds_] = gen_comb_authors(n_training,autores)
         test(r,:) = temp;
     end
     
-    test_ = test;
-    training_=training;
+    test_ = training;
+    training_= test;
     T_rounds_=T_rounds;
 end
 

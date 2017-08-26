@@ -6,8 +6,6 @@
 data = '/home/israel/Documents/actions_app/Datasets_actions/HDM05';
 
 % Path to data for each class
-
-
 path{1} = 'throwBasketball';
 path{2} = 'elbowToKnee1RepsLelbowStart';
 path{3} = 'grabHighR';
@@ -66,6 +64,7 @@ for Ni=1:N
         atores{ator}{Ni} = atores_temp;
     end
 end
+
 
 set_str = 'A';
 

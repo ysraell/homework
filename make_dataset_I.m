@@ -6,8 +6,8 @@
 data = '/home/israel/Documents/actions_app/Datasets_actions/BMHAD/BerkeleyMHAD/Accelerometer';
 
 % Total classes
-N = 12;
-Atores = 11;
+N = 11;
+Atores = 12;
 Rep = 5;
 
 % number_of_frames = 231 +- 163.2, (min/max 26/941), it is good to
@@ -71,6 +71,6 @@ end
 
 set_str = 'I';
 
-save dataset_I.mat trajectories atores cont set_str
+save dataset_I.mat trajectories atores cont set_str 
 
 

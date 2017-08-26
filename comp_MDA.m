@@ -59,18 +59,20 @@ TT_max = max(size(T_max));
 
 D_sets = dir('dataset_*.mat');
 T_sets = max(size(D_sets));
+Exps = [1 2 3];
+T_Exps = max(size(Exps));
 
-for n=1:2
-    load(D_sets(n).name)
+for n=1:T_Exps
+    load(D_sets(Exps(n)).name)
+    load(['comps_' set_str '.mat'])
+    
     N = max(size(trajectories));
     [~,~,p_dim] = size(trajectories{1}{1});
 
     for b=1:T_bal
-        [test_a,training_a,T_rounds] = gen_comb_authors(bal(b),atores);
-        R = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_rounds,T_bal);
-        T = zeros(T_proj,T_z,T_rr,T_d,T_rounds,T_bal);
+        R = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_rounds);
+        T = zeros(T_proj,T_z,T_rr,T_d,T_rounds);
         for r=1:T_rounds
-            [test_samples,training_samples,test_count,training_count] = gen_by_authors(trajectories,atores,test_a(r,:),training_a(r,:));
             for d=1:T_d
                 for rri=1:T_rr
                     for zi=1:T_z
@@ -81,8 +83,8 @@ for n=1:2
                                     disp(texto)
                                     tic
                                     [R(:,pi,it_max,zi,rri,d,r),~,~,~] = MDA_actions(trajectories,...
-                                                                           test_samples,...
-                                                                           training_samples,...
+                                                                           test_samples{r,b},...
+                                                                           training_samples{r,b},...
                                                                            dist_method_type,...
                                                                            dim_opt_proj(pi),...
                                                                            Dim(d),rr(rri),zeta(zi),...
@@ -103,10 +105,10 @@ for n=1:2
         [~,idx] = max(mR(:));
         [i,j,mm,k,l,m] = ind2sub(size(mR),idx);
         
-        mT = mean(T,Smax-1);
-        sT = std(T,[],Smax-1);
-        minT = min(T,[],Smax-1);
-        maxT = max(T,[],Smax-1);
+%         mT = mean(T,Smax-1);
+%         sT = std(T,[],Smax-1);
+%         minT = min(T,[],Smax-1);
+%         maxT = max(T,[],Smax-1);
 %         (:,pi,zi,rri,d,r)
 %         dim_opt_proj(j),Dim(k),rr(l),zeta(k)
         Results(n,b) = struct('Method','MDA',...

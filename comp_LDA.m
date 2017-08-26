@@ -19,18 +19,16 @@ w = warning ('off','all');
 % and (1-bal)*Total_samples for trainning.
 bal = [0.5 0.7];
 
-%% Experiment random samples, mix actors
-T_rounds = 2;
-
 % Dim = [0.9 0.99 1-4.50359962738.*eps*10.^[12 11 10 9 8 7 6 5 4 3]]';
 % Dim = [0.1:0.05:0.95 0.99 0.999 0.9999];
-Dim = [0.1 0.2];
+Dim = [0.1];
 
 %% Proporcional dim by eigenvalues or size dim (1 or 0)
-rr = [0 1];
+rr = [0];
 
 %% distance metric
-dist_method_type = 'og';
+dist_method_type = 'o';
+
 
 %% Weight of discriminant w max scatter
 % zeta = [0:6]';
@@ -54,7 +52,8 @@ T_Exps = max(size(Exps));
 
 for n=1:T_Exps
     load(D_sets(Exps(n)).name)
-    load(['rounds_' set_str '.mat'])
+    load(['comps_' set_str '.mat'])
+    T_rounds = max(size(test_samples));
     
     N = max(size(trajectories));
     [~,~,p_dim] = size(trajectories{1}{1});
@@ -66,27 +65,27 @@ for n=1:T_Exps
             for d=1:T_d
                 for rri=1:T_rr
                     for zi=1:T_z
-                        texto = ['(' set_str ') zeta = ',num2str(zi),'/',num2str(T_z),'. rr = ',num2str(rr(rri)),'/',num2str(T_rr),'. d = ',num2str(d),'/',num2str(T_d),'. Round:' num2str(r),'/',num2str(T_rounds),', bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
-                        disp(texto)
-                        tic
-                        [R(:,zi,rri,d,r),~,~] = LDA_actions(trajectories,...
-                                                           test_samples{r,b},...
-                                                           training_samples{r,b},...
-                                                           dist_method_type,...
-                                                           Dim(d),rr(rri),'u','svd',0,zeta(zi));
+                            texto = ['(' set_str ') zeta = ',num2str(zi),'/',num2str(T_z),'. rr = ',num2str(rr(rri)),'/',num2str(T_rr),'. d = ',num2str(d),'/',num2str(T_d),'. Round:' num2str(r),'/',num2str(T_rounds),', bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
+                            disp(texto)
+                            tic
+                            [R(:,zi,rri,d,r),~,~] = LDA_actions(trajectories,...
+                                                               test_samples{r,b},...
+                                                               training_samples{r,b},...
+                                                               dist_method_type,...
+                                                               Dim(d),rr(rri),'u','svd',0,zeta(zi));
 
-                        T(zi,rri,d,r) = toc;
+                            T(zi,rri,d,r) = toc;
                     end
                 end
             end
         end
-        Smax = 6;
+        Smax = 5;
         mR = mean(R,Smax);
         sR = std(R,[],Smax);
         minR = min(R,[],Smax);
         maxR = max(R,[],Smax);
         [~,idx] = max(mR(:));
-        [i,j,k,l,m] = ind2sub(size(mR),idx);
+        [i,j,k,l] = ind2sub(size(mR),idx);
 %         
 %         mT = mean(T,Smax-1);
 %         sT = std(T,[],Smax-1);
@@ -98,7 +97,6 @@ for n=1:T_Exps
                               'Dataset',set_str,...
                               'Best_R',[mR(i,j,k,l,m) sR(i,j,k,l,m) minR(i,j,k,l,m) maxR(i,j,k,l,m)],...
                               'Best_D',dist_method_type(i),...
-                              'Best_Proj',dim_opt_proj(j),...
                               'Best_Dim',Dim(m),...
                               'Best_rr',rr(l),...
                               'Best_zeta',zeta(k),...
@@ -109,7 +107,7 @@ for n=1:T_Exps
 end
 
 clear trajectories
-save search_LDA_data.mat
+save comp_LDA_data.mat
 % 
 % pause(60)
 % disp('poweroff')

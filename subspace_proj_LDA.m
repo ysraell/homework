@@ -1,4 +1,4 @@
-function [V,L] = subspace_proj_LDA(training_samples,trajectories,msd,zeta,adjust)
+function [V,L] = subspace_proj_LDA(training_samples,trajectories,msd,zeta)
 
        N = max(size(trajectories));
        [l,c] = size(trajectories{1}{1});
@@ -30,31 +30,69 @@ function [V,L] = subspace_proj_LDA(training_samples,trajectories,msd,zeta,adjust
             end
         end
         clear A
-
-        
+     
         if msd == 1
-            if (zeta==-1) 
-                zeta = max(eig(Sb/Sw));
+            switch zeta
+                case 1
+                    zb = max(eig(Sw));
+                    zw = 1;
+                case 2
+                    Sw = Sw./frob(Sw);
+                    Sb = Sb./frob(Sb);
+                    zw = 1;
+                    zb = 10;
+                case 3
+                    Sw = Sw./frob(Sw);
+                    Sb = Sb./frob(Sb);
+                    zw = 1;
+                    zb = 100;
+                case 4
+                    Sw = Sw./frob(Sw);
+                    Sb = Sb./frob(Sb);
+                    zw = 1;
+                    zb = 1000;
+                case 5
+                    zw = 1;
+                    zb = 10;
+                case 6
+                    zw = 1;
+                    zb = 100;
+                otherwise
+                    zw = 1;
+                    zb = 1000;
             end
-            if (zeta==-2) 
-                zeta = max(eig(Sb));
-            end
-            if (zeta==-3) 
-                zeta = max(eig(Sw));
-            end  
-            Sb = Sb./frob(Sb);
-            Sw = Sw./frob(Sw);
-            [V,L] = eig(zeta.*Sb - Sw);
+            [V,L] = eig(zb.*Sb - zw.*Sw);
         else
-            
-            if adjust
-                Sb = Sb./frob(Sb)+eye(l*c);
-                Sw = Sw./frob(Sw)+eye(l*c);
-            else
-                Sb = Sb./frob(Sb);
-                Sw = Sw./frob(Sw);
+            switch zeta
+                case 1
+                    Sw = Sw+eye(l*c);
+                    z=1;
+                case 2
+                    Sw = Sw./frob(Sw);
+                    Sb = Sb./frob(Sb);
+                    z=1;
+                case 3
+                    Sw = Sw./frob(Sw)+eye(l*c);
+                    Sb = Sb./frob(Sb);
+                    z=1;
+                case 4
+                    Sw = Sw./frob(Sw);
+                    Sb = Sb./frob(Sb);
+                    z=10;
+                case 5
+                    Sw = Sw./frob(Sw)+eye(l*c);
+                    Sb = Sb./frob(Sb);
+                    z=10;
+                case 6
+                    Sw = Sw./frob(Sw)+eye(l*c);
+                    Sb = Sb./frob(Sb);
+                    z=100;
+                otherwise
+                    z=1;
             end
-            [V,L] = eig(Sb/Sw);
+            Temp = z.*Sb/Sw;
+            Temp(~isfinite(Temp)) = 0;
+            [V,L] = eig(Temp);
         end
         
 end

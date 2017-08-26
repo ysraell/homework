@@ -6,13 +6,14 @@
 data = '/home/israel/Documents/actions_app/Datasets_actions/BMHAD/BerkeleyMHAD/Mocap/OpticalData';
 
 % Total classes
-N = 12;
-Atores = 11;
+N = 11;
+Atores = 12;
 Rep = 5;
 
 % number_of_frames = 3602.91 -+2510.94, (min/max 774/14567), it is good to
 % 90.17% of the total frames. (using sum((x<461).*x+(x>460).*460)/sum(x)).
-tamanho_sinal=3000;  %1,7G 2040339152 bytes
+% tamanho_sinal=6100; 4148611952 B ~ 4 GB
+tamanho_sinal = 1000;
 
 trajectories = [];
 atores = [];
@@ -23,14 +24,14 @@ cont = 0;
 for n=1:N;
     sample=0;
     for a=1:Atores
-        atores_temp =[];
+        atores_temp = [];
         for r=1:Rep
             
             filename = strcat(data,'/moc_s',num2str(a,'%02i'),'_a',num2str(n,'%02i'),'_r',num2str(r,'%02i'),'.txt');
             
             if exist(filename,'file')
                 cont=cont+1;
-                fprintf('F) Generating sample %d for class %d.\n',sample,n)
+                fprintf('D) Generating sample %d for class %d.\n',sample,n)
                 Temp = load(filename);
                 Temp = Temp(:,1:end-2);
                 Size(cont) = max(size(Temp));
