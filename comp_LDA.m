@@ -17,7 +17,7 @@ w = warning ('off','all');
 %% Balance
 % balance of samples for test: bal*Total_samples for each classe for test
 % and (1-bal)*Total_samples for trainning.
-bal = [0.5 0.7];
+bal = [0.5];
 
 % Dim = [0.9 0.99 1-4.50359962738.*eps*10.^[12 11 10 9 8 7 6 5 4 3]]';
 % Dim = [0.1:0.05:0.95 0.99 0.999 0.9999];
@@ -32,7 +32,7 @@ dist_method_type = 'o';
 
 %% Weight of discriminant w max scatter
 % zeta = [0:6]';
-zeta = [0 1]';
+zeta = [0]';
 
 
 %% Totals
@@ -54,7 +54,7 @@ for n=1:T_Exps
     load(D_sets(Exps(n)).name)
     load(['comps_' set_str '.mat'])
     T_rounds = max(size(test_samples));
-    
+%     T_rounds = 2;
     N = max(size(trajectories));
     [~,~,p_dim] = size(trajectories{1}{1});
 
@@ -95,11 +95,11 @@ for n=1:T_Exps
 %         dim_opt_proj(j),Dim(k),rr(l),zeta(k)
         Results(n,b) = struct('Method','LDA',...
                               'Dataset',set_str,...
-                              'Best_R',[mR(i,j,k,l,m) sR(i,j,k,l,m) minR(i,j,k,l,m) maxR(i,j,k,l,m)],...
+                              'Best_R',[mR(i,j,k,l) sR(i,j,k,l) minR(i,j,k,l) maxR(i,j,k,l)],...
                               'Best_D',dist_method_type(i),...
-                              'Best_Dim',Dim(m),...
-                              'Best_rr',rr(l),...
-                              'Best_zeta',zeta(k),...
+                              'Best_Dim',Dim(l),...
+                              'Best_rr',rr(k),...
+                              'Best_zeta',zeta(j),...
                               'R',R,'Time',T);
         
     end
@@ -114,10 +114,10 @@ save comp_LDA_data.mat
 % system('poweroff')
 
 
-ST=0;
-for n=1:3
-    ST=ST+sum(Results(n).Time(:));
-end
+% ST=0;
+% for n=1:3
+%     ST=ST+sum(Results(n).Time(:));
+% end
 
 
 

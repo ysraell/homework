@@ -73,7 +73,7 @@ for n=1:T_Exps
                                                            test_samples{r,b},...
                                                            training_samples{r,b},...
                                                            dist_method_type,...
-                                                           Dim(d),rr(rri),'u','svd',0,zeta(zi));
+                                                           Dim(d),rr(rri),'u','svd',1,zeta(zi));
 
                         T(zi,rri,d,r) = toc;
                     end
@@ -94,7 +94,7 @@ for n=1:T_Exps
 %         maxT = max(T,[],Smax-1);
 %         (:,pi,zi,rri,d,r)
 %         dim_opt_proj(j),Dim(k),rr(l),zeta(k)
-        Results(n,b) = struct('Method','LDA',...
+        Results(n,b) = struct('Method','LSD',...
                               'Dataset',set_str,...
                               'Best_R',[mR(i,j,k,l) sR(i,j,k,l) minR(i,j,k,l) maxR(i,j,k,l)],...
                               'Best_D',dist_method_type(i),...
@@ -109,7 +109,7 @@ for n=1:T_Exps
 end
 
 clear trajectories
-save search_LDA_data.mat
+save search_LSD_data.mat
 % 
 % pause(60)
 % disp('poweroff')
