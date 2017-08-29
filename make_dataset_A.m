@@ -47,7 +47,12 @@ for Ni=1:N
             temp = zeros(total_joints,tamanho_sinal,total_coord);
             for coord = 1:total_coord
                 for joint=1:total_joints
+%                     figure;
+%                     plot(mot.jointTrajectories{joint}(coord,:))
                     temp(joint,:,coord) = interpolar(mot.jointTrajectories{joint}(coord,:),tamanho_sinal-1);
+%                     figure;
+%                     plot(temp(joint,:,coord))
+%                     pause
                 end
                 temp(:,:,coord) = normalizar(temp(:,:,coord));
             end
