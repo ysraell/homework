@@ -73,7 +73,7 @@ end
 
 set_str = 'A';
 
-save dataset_A.mat trajectories atores cont set_str
+save -v7.3 dataset_A.mat trajectories atores cont set_str
 
 
 %EOF

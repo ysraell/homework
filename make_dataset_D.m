@@ -56,6 +56,6 @@ end
 
 set_str = 'D';
 
-save dataset_D.mat trajectories atores cont set_str
+save -v7.3 dataset_D.mat trajectories atores cont set_str
 
 

@@ -150,6 +150,6 @@ end
 cont = 90;
 set_str = 'K';
 
-save dataset_K.mat trajectories atores cont set_str 
+save -v7.3 dataset_K.mat trajectories atores cont set_str 
 
 
