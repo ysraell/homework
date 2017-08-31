@@ -6,7 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % function [R_,MC_] = LDA_actions(trajectories,test_samples,training_samples)
-function [R_,MC_,num_max] = LDA_actions(trajectories,test_samples,training_samples,dist_method_type,Dim,r,Func,Algorithm,msd,zeta)
+function [R_,MC_,num_max,time_] = LDA_actions(trajectories,test_samples,training_samples,dist_method_type,Dim,r,Func,Algorithm,msd,zeta)
 
     N = max(size(trajectories));
     [l,c] = size(trajectories{1}{1});
@@ -75,10 +75,13 @@ function [R_,MC_,num_max] = LDA_actions(trajectories,test_samples,training_sampl
              T_dist = max(size(dist_method_type));
             MC = zeros(N,N,T_dist);
             R = zeros(T_dist,1);
+            time = zeros(T_dist,1);
             for d=1:T_dist
+                tic
                 [R(d),MC(:,:,d)] = TEST_step_MDAs(trajectories_proj,test_samples,training_samples,N,dist_method_type(d));
+                time(d) = toc;
             end
-
+            time_=time;
             MC_ = MC;
             R_ = R;
     end

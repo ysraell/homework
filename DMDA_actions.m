@@ -5,7 +5,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [R_DMDA,MC_DMDA,num_max] = DMDA_actions(trajectories,test_samples,training_samples,dist_method_type,dim_opt_proj,Dim,r,zeta)
+function [R_DMDA,MC_DMDA,num_max,time_] = DMDA_actions(trajectories,test_samples,training_samples,dist_method_type,dim_opt_proj,Dim,r,zeta)
 
     N = max(size(trajectories));
     [l,c,p] = size(trajectories{1}{1});
@@ -65,10 +65,13 @@ function [R_DMDA,MC_DMDA,num_max] = DMDA_actions(trajectories,test_samples,train
      T_dist = max(size(dist_method_type));
     MC = zeros(N,N,T_dist);
     R = zeros(T_dist,1);
+    time = zeros(T_dist,1);
     for d=1:T_dist
+        tic
         [R(d),MC(:,:,d)] = TEST_step_MDAs(trajectories_proj,test_samples,training_samples,N,dist_method_type(d));
+        time(d) = toc;
     end
+    time_=time;
     MC_DMDA = MC;
     R_DMDA = R;
-      
 end

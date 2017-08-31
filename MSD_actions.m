@@ -5,7 +5,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [R_MSD,MC_MSD,num_max,E_MSD] = MSD_actions(trajectories,test_samples,training_samples,dist_method_type,dim_opt_proj,Dim,r,zeta,T_max,tolerancia)
+function [R_MSD,MC_MSD,num_max,E_MSD,time_] = MSD_actions(trajectories,test_samples,training_samples,dist_method_type,dim_opt_proj,Dim,r,zeta,T_max,tolerancia)
 
     % Total classes
     N = max(size(trajectories));
@@ -101,9 +101,13 @@ function [R_MSD,MC_MSD,num_max,E_MSD] = MSD_actions(trajectories,test_samples,tr
     T_dist = max(size(dist_method_type));
     MC = zeros(N,N,T_dist);
     R = zeros(T_dist,1);
+    time = zeros(T_dist,1);
     for d=1:T_dist
+        tic
         [R(d),MC(:,:,d)] = TEST_step_MDAs(trajectories_proj,test_samples,training_samples,N,dist_method_type(d));
+        time(d) = toc;
     end
+    time_=time;
     MC_MSD = MC;
     R_MSD = R;
     

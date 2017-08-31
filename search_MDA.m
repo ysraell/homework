@@ -13,36 +13,37 @@ close all
 clear all
 clc
 w = warning ('off','all');
+addpath(pwd)
 
 %% Balance
 % balance of samples for test: bal*Total_samples for each classe for test
 % and (1-bal)*Total_samples for trainning.
-bal = [0.5 0.7];
+bal = 1;
 
 %% Experiment random samples, mix actors
-T_rounds = 2;
+T_rounds = 100;
 
 % Dim = [0.9 0.99 1-4.50359962738.*eps*10.^[12 11 10 9 8 7 6 5 4 3]]';
-% Dim = [0.1:0.05:0.95 0.99 0.999 0.9999];
-Dim = [0.1 0.2];
+Dim = [0.1:0.05:0.95 0.99 0.999 0.9999];
+% Dim = [0.1 0.2];
 
 %% Proporcional dim by eigenvalues or size dim (1 or 0)
 rr = [0 1];
 
 %% distance metric
-dist_method_type = 'of';
+dist_method_type = 'og';
 
 %% How much dim progections
-% dim_opt_proj = [1 2 3];
-dim_opt_proj = [1 2];
+dim_opt_proj = [1 2 3];
+% dim_opt_proj = [1 2];
 
 %% Weight of discriminant w max scatter
-% zeta = [0:6]';
-zeta = [0 4]';
+zeta = [0:6]';
+% zeta = [0 4]';
 
 %% Max iterations
-% T_max = [1 2 3 4];
-T_max = [1 2];
+T_max = [1 2 3 4];
+% T_max = [1 2];
 
 %% Max tolerancia
 tolerancia = 0;
@@ -61,8 +62,10 @@ TT_max = max(size(T_max));
 
 D_sets = dir('dataset_*.mat');
 T_sets = max(size(D_sets));
-Exps = [7];
+Exps = 1:T_sets;
 T_Exps = max(size(Exps));
+delete(gcp)
+parpool('local',16);
 
 for n=1:T_Exps
     load(D_sets(Exps(n)).name)
@@ -70,28 +73,33 @@ for n=1:T_Exps
     N = max(size(trajectories));
     [~,~,p_dim] = size(trajectories{1}{1});
 
-    for b=1:T_bal
+    for b=bal
 
         R = zeros(T_dm,T_proj,TT_max,T_z,T_rr,T_d,T_rounds);
-        T = zeros(T_proj,T_z,TT_max,T_rr,T_d,T_rounds);
-        for r=1:T_rounds
+        time = zeros(T_dm,T_proj,TT_max,T_z,T_rr,T_d,T_rounds);
+        parfor r=1:T_rounds
             for d=1:T_d
                 for rri=1:T_rr
                     for zi=1:T_z
                         for it_max=1:TT_max
                             for pi=1:T_proj
                                 if ((dim_opt_proj(pi)>2)&&(p_dim>1))||(dim_opt_proj(pi)<3)
-                                    texto = ['(' set_str ')' ' T_max = ',num2str(T_max(it_max)),'/',num2str(TT_max) ' Proj = ',num2str(dim_opt_proj(pi)),'/',num2str(T_proj),' zeta = ',num2str(zi),'/',num2str(T_z),'. rr = ',num2str(rr(rri)),'/',num2str(T_rr),'. d = ',num2str(d),'/',num2str(T_d),'. Round:' num2str(r),'/',num2str(T_rounds),', bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
+                                    texto = ['(' set_str ')'...
+                                             ' T_max = ',num2str(T_max(it_max)),'/',num2str(TT_max),'.'...
+                                             ' Proj = ',num2str(dim_opt_proj(pi)),'/',num2str(T_proj),'.'...
+                                             ' zeta = ',num2str(zi),'/',num2str(T_z),'.'...
+                                             ' rr = ',num2str(rr(rri)),'/',num2str(T_rr),'.'...
+                                             ' d = ',num2str(d),'/',num2str(T_d),'.'...
+                                             ' Round:' num2str(r),'/',num2str(T_rounds),'.'...
+                                             ' bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
                                     disp(texto)
-                                    tic
-                                    [R(:,pi,it_max,zi,rri,d,r),~,~,~] = MDA_actions(trajectories,...
+                                    [R(:,pi,it_max,zi,rri,d,r),~,~,~,time(:,pi,it_max,zi,rri,d,r)] = MDA_actions(trajectories,...
                                                                            test_samples{r,b},...
                                                                            training_samples{r,b},...
                                                                            dist_method_type,...
                                                                            dim_opt_proj(pi),...
                                                                            Dim(d),rr(rri),zeta(zi),...
                                                                            T_max(it_max),tolerancia);
-                                    T(pi,it_max,zi,rri,d,r) = toc;
                                 end
                             end
                         end
@@ -122,7 +130,7 @@ for n=1:T_Exps
                               'Best_Dim',Dim(m),...
                               'Best_rr',rr(l),...
                               'Best_zeta',zeta(k),...
-                              'R',R,'Time',T);
+                              'R',R,'Time',time);
         
     end
 

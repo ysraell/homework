@@ -21,11 +21,13 @@ for n=1:T_sets
     test_count=[];
     training_count=[];
     
+    
     T_bal = max(size(bal));
+    T_rounds = zeros(T_bal,1);
     T_atores = max(size(atores));
     for b=1:T_bal
-        [test_a,training_a,T_rounds] = gen_comb_authors(round(bal(b)*T_atores+eps),atores);
-        for r=1:T_rounds
+        [test_a,training_a,T_rounds(b)] = gen_comb_authors(round(bal(b)*T_atores+eps),atores);
+        for r=1:T_rounds(b)
             [test_samples{r,b},training_samples{r,b},test_count{r,b},training_count{r,b}] = gen_by_authors(trajectories,atores,test_a(r,:),training_a(r,:));
         end
     end

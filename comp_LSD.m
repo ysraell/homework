@@ -13,26 +13,27 @@ close all
 clear all
 clc
 w = warning ('off','all');
+addpath(pwd)
 
 %% Balance
 % balance of samples for test: bal*Total_samples for each classe for test
 % and (1-bal)*Total_samples for trainning.
-bal = [0.5];
+bal = 1;
 
 % Dim = [0.9 0.99 1-4.50359962738.*eps*10.^[12 11 10 9 8 7 6 5 4 3]]';
-% Dim = [0.1:0.05:0.95 0.99 0.999 0.9999];
-Dim = [0.1];
+Dim = [0.1:0.05:0.95 0.99 0.999 0.9999];
+% Dim = [0.1];
 
 %% Proporcional dim by eigenvalues or size dim (1 or 0)
-rr = [0];
+rr = [0 1];
 
 %% distance metric
-dist_method_type = 'o';
+dist_method_type = 'og';
 
 
 %% Weight of discriminant w max scatter
-% zeta = [0:6]';
-zeta = [0]';
+zeta = [0:6]';
+% zeta = [0]';
 
 
 %% Totals
@@ -47,34 +48,33 @@ T_z = max(size(zeta));
 
 D_sets = dir('dataset_*.mat');
 T_sets = max(size(D_sets));
-Exps = [3];
+Exps = [2 3 11];
 T_Exps = max(size(Exps));
+delete(gcp)
+parpool('local',16);
 
 for n=1:T_Exps
     load(D_sets(Exps(n)).name)
     load(['comps_' set_str '.mat'])
     T_rounds = max(size(test_samples));
-    T_rounds = 2;
+%     T_rounds = 2;
     N = max(size(trajectories));
     [~,~,p_dim] = size(trajectories{1}{1});
 
     for b=1:T_bal
-        R = zeros(T_dm,T_z,T_rr,T_d,T_rounds);
-        T = zeros(T_z,T_rr,T_d,T_rounds);
-        for r=1:T_rounds
+        R = zeros(T_dm,T_z,T_rr,T_d,T_rounds(b));
+        time = zeros(T_dm,T_z,T_rr,T_d,T_rounds(b));
+        parfor r=1:T_rounds(b)
             for d=1:T_d
                 for rri=1:T_rr
                     for zi=1:T_z
-                            texto = ['(' set_str ') zeta = ',num2str(zi),'/',num2str(T_z),'. rr = ',num2str(rr(rri)),'/',num2str(T_rr),'. d = ',num2str(d),'/',num2str(T_d),'. Round:' num2str(r),'/',num2str(T_rounds),', bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
+                            texto = ['(' set_str ') zeta = ',num2str(zi),'/',num2str(T_z),'. rr = ',num2str(rr(rri)),'/',num2str(T_rr),'. d = ',num2str(d),'/',num2str(T_d),'. Round:' num2str(r),'/',num2str(T_rounds(b)),', bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
                             disp(texto)
-                            tic
-                            [R(:,zi,rri,d,r),~,~] = LDA_actions(trajectories,...
+                            [R(:,zi,rri,d,r),~,~,time(:,zi,rri,d,r)] = LDA_actions(trajectories,...
                                                                test_samples{r,b},...
                                                                training_samples{r,b},...
                                                                dist_method_type,...
                                                                Dim(d),rr(rri),'u','svd',1,zeta(zi));
-
-                            T(zi,rri,d,r) = toc;
                     end
                 end
             end
@@ -100,7 +100,7 @@ for n=1:T_Exps
                               'Best_Dim',Dim(l),...
                               'Best_rr',rr(k),...
                               'Best_zeta',zeta(j),...
-                              'R',R,'Time',T);
+                              'R',R,'Time',time);
         
     end
 

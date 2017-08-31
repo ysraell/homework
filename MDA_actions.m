@@ -5,7 +5,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [R_MDA,MC_MDA,num_max,E_MDA] = MDA_actions(trajectories,test_samples,training_samples,dist_method_type,dim_opt_proj,Dim,r,zeta,T_max,tolerancia)
+function [R_,MC_,num_max,E_,time_] = MDA_actions(trajectories,test_samples,training_samples,dist_method_type,dim_opt_proj,Dim,r,zeta,T_max,tolerancia)
 
     N = max(size(trajectories));
     
@@ -71,7 +71,7 @@ function [R_MDA,MC_MDA,num_max,E_MDA] = MDA_actions(trajectories,test_samples,tr
     if dim_opt_proj >2
         [Up,num_max(3,:)] =redux_dim(aUp,Lp,Dim,r);  
     end
-    E_MDA = Erro_it;
+    E_ = Erro_it;
         
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Testing step.    
@@ -97,13 +97,17 @@ function [R_MDA,MC_MDA,num_max,E_MDA] = MDA_actions(trajectories,test_samples,tr
     
     %%%%% Classification All testing samples vs All training samples
     
-     T_dist = max(size(dist_method_type));
+    T_dist = max(size(dist_method_type));
     MC = zeros(N,N,T_dist);
     R = zeros(T_dist,1);
+    time = zeros(T_dist,1);
     for d=1:T_dist
+        tic
         [R(d),MC(:,:,d)] = TEST_step_MDAs(trajectories_proj,test_samples,training_samples,N,dist_method_type(d));
+        time(d) = toc;
     end
-    MC_MDA = MC;
-    R_MDA = R;
+    time_=time;
+    MC_ = MC;
+    R_ = R;
     
 end
