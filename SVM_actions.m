@@ -5,7 +5,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [R_,MC_] = SVM_actions(trajectories,test_samples,training_samples,arg_svm)
+function [R_,MC_,time_] = SVM_actions(trajectories,test_samples,training_samples,arg_svm)
 
     N = max(size(trajectories));
     [l,c] = size(trajectories{1}{1});
@@ -27,7 +27,7 @@ function [R_,MC_] = SVM_actions(trajectories,test_samples,training_samples,arg_s
     end
     
     MODEL = svmtrain(C,Y,arg_svm);
-    
+    tic
     MC = zeros(N,N);
     for Ni=1:N
         M_test = max(size(test_samples{Ni}));
@@ -44,6 +44,7 @@ function [R_,MC_] = SVM_actions(trajectories,test_samples,training_samples,arg_s
         MC(Ni,:) = MC(Ni,:)./M_test;
     end
     
+    time_=toc;
     MC_ = MC;
     R_ = sum(diag(MC))/N;
     
