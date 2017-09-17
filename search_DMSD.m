@@ -12,17 +12,21 @@ close all
 clear all
 clc
 
+disp('Loading paths')
 addpath(pwd)
+addpath('tensor_toolbox_2.6')
+addpath('tensorlab')
 
 w = warning ('off','all');
 
+disp('Loading vars')
 %% Balance
 % balance of samples for test: bal*Total_samples for each classe for test
 % and (1-bal)*Total_samples for trainning.
 bal = 1;
 
 %% Experiment random samples, mix actors
-T_rounds = 100;
+T_rounds = 10;
 
 % Dim = [0.9 0.99 1-4.50359962738.*eps*10.^[12 11 10 9 8 7 6 5 4 3]]';
 Dim = [0.05:0.05:0.95 0.99 0.999 0.9999];
@@ -56,9 +60,10 @@ D_sets = dir('dataset_*.mat');
 T_sets = max(size(D_sets));
 Exps = 1:T_sets;
 T_Exps = max(size(Exps));
-delete(gcp)
-parpool('local',16);
+ delete(gcp)
+ parpool('local',16);
 
+disp('Starting experiments...')
 for n=1:T_Exps
     load(D_sets(Exps(n)).name)
     load(['rounds_' set_str '.mat'])
@@ -71,26 +76,28 @@ for n=1:T_Exps
         R = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_rounds);
         time = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_rounds);
         parfor r=1:T_rounds
+%  	for r=1:T_rounds
             for d=1:T_d
                 for rri=1:T_rr
                     for zi=1:T_z
                         for pi=1:T_proj
-                            if ((dim_opt_proj(pi)>2)&&(p_dim>1))||(dim_opt_proj(pi)<3)
-                                texto = ['(' set_str ')'...
-                                         ' Proj = ',num2str(pi),'/',num2str(T_proj),'.'...
-                                         ' zeta = ',num2str(zi),'/',num2str(T_z),'.'...
-                                         ' rr = ',num2str(rr(rri)),'/',num2str(T_rr),'.'...
-                                         ' d = ',num2str(d),'/',num2str(T_d),'.'...
-                                         ' Round:' num2str(r),'/',num2str(T_rounds),'.'...
-                                         ' bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
-                                disp(texto)
+                             if ((dim_opt_proj(pi)>2)&&(p_dim>1))||(dim_opt_proj(pi)<3)
+%                                  texto = ['(' set_str ')'...
+%                                           ' Proj = ',num2str(pi),'/',num2str(T_proj),'.'...
+%                                           ' zeta = ',num2str(zi),'/',num2str(T_z),'.'...
+%                                           ' rr = ',num2str(rr(rri)),'/',num2str(T_rr),'.'...
+%                                           ' d = ',num2str(d),'/',num2str(T_d),'.'...
+%                                           ' Round:' num2str(r),'/',num2str(T_rounds),'.'...
+%                                           ' bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
+%                                  disp([pi zi rri d r])
+%                                  disp([T_proj T_z T_rr T_d T_rounds])
                                 [R(:,pi,zi,rri,d,r),~,~,time(:,pi,zi,rri,d,r)] = DMSD_actions(trajectories,...
                                                                         test_samples{r,b},...
                                                                         training_samples{r,b},...
                                                                         dist_method_type,...
                                                                         dim_opt_proj(pi),...
                                                                         Dim(d),rr(rri),zeta(zi));
-                            end
+                             end
                         end
                     end
                 end
@@ -122,6 +129,8 @@ for n=1:T_Exps
 %                               'R',R,'Time',T);                          
         
     end
+    clear trajectories
+    save results_rounds_DMSD_og.mat
 
 end
 

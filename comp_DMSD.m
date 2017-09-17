@@ -13,10 +13,14 @@ clear all
 clc
 w = warning ('off','all');
 addpath(pwd)
-
+addpath('tensor_toolbox_2.6')
+addpath('tensorlab')
 %% Balance authors
 % how much for training
 bal = 1;
+
+%% Max combinations
+M_comps = 10;
 
 %% data
 % Dim = [0.9 0.99 1-4.50359962738.*eps*10.^[12 11 10 9 8 7 6 5 4 3]]';
@@ -49,10 +53,10 @@ T_proj = max(size(dim_opt_proj));
 
 D_sets = dir('dataset_*.mat');
 T_sets = max(size(D_sets));
-Exps = 1:T_sets;
+Exps = 10:T_sets;
 T_Exps = max(size(Exps));
 delete(gcp)
-parpool('local',16);
+parpool('local',4);
 
 for n=1:T_Exps
     load(D_sets(Exps(n)).name)
@@ -62,9 +66,11 @@ for n=1:T_Exps
     [~,~,p_dim] = size(trajectories{1}{1});
 
     for b=bal
-        R = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_rounds(b));
-        time = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_rounds(b));
-        parfor r=1:T_rounds(b)
+        T_comps = min([M_comps T_rounds(b)]);
+        R = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_comps);
+        time = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_comps);
+        parfor r=1:T_comps
+% 	for r=1:T_comps
             for d=1:T_d
                 for rri=1:T_rr
                     for zi=1:T_z
@@ -75,7 +81,7 @@ for n=1:T_Exps
                                         ' zeta = ',num2str(zi),'/',num2str(T_z),'.'...
                                         ' rr = ',num2str(rr(rri)),'/',num2str(T_rr),'.'...
                                         ' d = ',num2str(d),'/',num2str(T_d),'.'...
-                                        ' Round:' num2str(r),'/',num2str(T_rounds(b)),'.'...
+                                        ' Round:' num2str(r),'/',num2str(T_comps),'.'...
                                         ' bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
                                 disp(texto)
                                 [R(:,pi,zi,rri,d,r),~,~,time(:,pi,zi,rri,d,r)] = DMSD_actions(trajectories,...
@@ -116,6 +122,8 @@ for n=1:T_Exps
         
     end
 
+    clear trajectories
+    save results_comp_DMSD_og.mat
 end
 
 clear trajectories
