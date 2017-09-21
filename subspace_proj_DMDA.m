@@ -60,7 +60,9 @@ function [U,num_max] = subspace_proj_DMDA(training_samples,trajectories,N,l,c,mo
         end
         
 
-        [V,L] = eig(z.*Sb/Sw);
+            Temp = z.*Sb/Sw;
+            Temp(~isfinite(Temp)) = 0;
+            [V,L] = eig(Temp);
         [L,I] = sort(diag((L)),'descend');
         V = V(:,I);
         

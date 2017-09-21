@@ -60,8 +60,9 @@ function [U,L] = subspace_proj_MDA(training_samples,trajectories,N,l,c,mode,zeta
                 z=1;
         end
         
-
-        [U,L] = eig(z.*Sb/Sw);
+            Temp = z.*Sb/Sw;
+            Temp(~isfinite(Temp)) = 0;
+            [U,L] = eig(Temp);
         
 end
 

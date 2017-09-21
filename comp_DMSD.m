@@ -135,8 +135,8 @@ exit
 
 % 
 % pause(60)
-% disp('poweroff')
-% system('poweroff')
+ disp('poweroff')
+ system('poweroff')
 % 
 % 
 % ST=0;

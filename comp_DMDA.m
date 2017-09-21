@@ -55,10 +55,10 @@ T_proj = max(size(dim_opt_proj));
 D_sets = dir('dataset_*.mat');
 T_sets = max(size(D_sets));
 % Exps = 1:T_sets;
- Exps = [1:3 6;
+ Exps = 10:T_sets;
 T_Exps = max(size(Exps));
 % delete(gcp)
-% parpool('local',16);
+parpool('local',4);
 
 for n=1:T_Exps
     load(D_sets(Exps(n)).name)
@@ -71,8 +71,8 @@ for n=1:T_Exps
         T_comps = min([M_comps T_rounds(b)]);
         R = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_comps);
         time = zeros(T_dm,T_proj,T_z,T_rr,T_d,T_comps);
-%         parfor r=1:T_comps
-	for r=1:T_comps
+        parfor r=1:T_comps
+% 	for r=1:T_comps
             for d=1:T_d
                 for rri=1:T_rr
                     for zi=1:T_z
@@ -83,7 +83,7 @@ for n=1:T_Exps
                                         ' zeta = ',num2str(zi),'/',num2str(T_z),'.'...
                                         ' rr = ',num2str(rr(rri)),'/',num2str(T_rr),'.'...
                                         ' d = ',num2str(d),'/',num2str(T_d),'.'...
-                                        ' Round:' num2str(r),'/',num2str(T_rounds(b)),'.'...
+                                        ' Round:' num2str(r),'/',num2str(T_comps),'.'...
                                         ' bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
                                 disp(texto)
                                 [R(:,pi,zi,rri,d,r),~,~,time(:,pi,zi,rri,d,r)] = DMDA_actions(trajectories,...
@@ -124,6 +124,8 @@ for n=1:T_Exps
         
     end
 
+    clear trajectories
+    save results_comp_DMDA_og.mat
 end
 
 clear trajectories
