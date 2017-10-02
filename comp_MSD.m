@@ -17,6 +17,9 @@ w = warning ('on','all');
 % how much for training
 bal = 1;
 
+%% Max combinations
+M_comps = 10;
+
 %% Experiment random samples, mix actors
 
 % Dim = [0.9 0.99 1-4.50359962738.*eps*10.^[12 11 10 9 8 7 6 5 4 3]]';
@@ -58,10 +61,10 @@ TT_max = max(size(T_max));
 
 D_sets = dir('dataset_*.mat');
 T_sets = max(size(D_sets));
-Exps = 1:T_sets;
+Exps = [6:T_sets];
 T_Exps = max(size(Exps));
-delete(gcp)
-parpool('local',16);
+% delete(gcp)
+parpool('local',4);
 
 for n=1:T_Exps
     load(D_sets(Exps(n)).name)
@@ -71,14 +74,19 @@ for n=1:T_Exps
     [~,~,p_dim] = size(trajectories{1}{1});
 
     for b=bal
-        R = zeros(T_dm,T_proj,TT_max,T_z,T_rr,T_d,T_rounds(b));
-        time = zeros(T_dm,T_proj,TT_max,T_z,T_rr,T_d,T_rounds(b));
-        parfor r=1:T_rounds(b)
-            for d=1:T_d
+        T_comps = min([M_comps T_rounds(b)]);
+        R = zeros(T_dm,T_proj,TT_max,T_z,T_rr,T_d,T_comps);
+        time = zeros(T_dm,T_proj,TT_max,T_z,T_rr,T_d,T_comps);
+%         parfor r=1:T_comps
+        for r=1:T_comps
+            load(D_sets(Exps(n)).name)
+%             for d=1:T_d            
+            parfor d=1:T_d
                 for rri=1:T_rr
                     for zi=1:T_z
                         for it_max=1:TT_max
                             for pi=1:T_proj
+%                             parfor pi=1:T_proj
                                 if ((dim_opt_proj(pi)>2)&&(p_dim>1))||(dim_opt_proj(pi)<3)
                                     texto = ['(' set_str ')'...
                                              ' Proj = ',num2str(dim_opt_proj(pi)),'/',num2str(T_proj)...
@@ -102,6 +110,9 @@ for n=1:T_Exps
                     end
                 end
             end
+            
+            clear trajectories
+            save results_comp_MSD_TEMP.mat
         end
         Smax = 7;
         mR = mean(R,Smax);
@@ -130,10 +141,13 @@ for n=1:T_Exps
         
     end
 
+    clear trajectories
+    save results_comp_MSD.mat
+    
 end
 
 clear trajectories
-save comp_MSD_data.mat
+save results_comp_MSD_.mat
 
 % pause(60)
 % disp('poweroff')
