@@ -81,14 +81,14 @@ function [R_MSD,MC_MSD,num_max,E_MSD,time_] = MSD_actions(trajectories,test_samp
     trajectories_proj = trajectories;
     for Ni=1:N
         for Mi = training_samples{Ni}
-            if p==3
+            if p>1
                 trajectories_proj{Ni}{Mi} = double(ttensor(tensor(trajectories{Ni}{Mi}),Ul',Uc',Up'));
             else
                 trajectories_proj{Ni}{Mi} = double(ttensor(tensor(trajectories{Ni}{Mi}),Ul',Uc'));
             end
         end
         for Mi = test_samples{Ni}
-            if p==3
+            if p>1
                 trajectories_proj{Ni}{Mi} = double(ttensor(tensor(trajectories{Ni}{Mi}),Ul',Uc',Up'));
             else
                 trajectories_proj{Ni}{Mi} = double(ttensor(tensor(trajectories{Ni}{Mi}),Ul',Uc'));

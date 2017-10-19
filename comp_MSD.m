@@ -61,7 +61,7 @@ TT_max = max(size(T_max));
 
 D_sets = dir('dataset_*.mat');
 T_sets = max(size(D_sets));
-Exps = [6:T_sets];
+Exps = [10:T_sets];
 T_Exps = max(size(Exps));
 % delete(gcp)
 parpool('local',4);
@@ -77,9 +77,10 @@ for n=1:T_Exps
         T_comps = min([M_comps T_rounds(b)]);
         R = zeros(T_dm,T_proj,TT_max,T_z,T_rr,T_d,T_comps);
         time = zeros(T_dm,T_proj,TT_max,T_z,T_rr,T_d,T_comps);
+%        load results_comp_MSD_TEMP.mat
 %         parfor r=1:T_comps
         for r=1:T_comps
-            load(D_sets(Exps(n)).name)
+          load(D_sets(Exps(n)).name)
 %             for d=1:T_d            
             parfor d=1:T_d
                 for rri=1:T_rr
@@ -94,7 +95,7 @@ for n=1:T_Exps
                                              ' zeta = ',num2str(zi),'/',num2str(T_z),'.'... 
                                              ' rr = ',num2str(rr(rri)),'/',num2str(T_rr),'.' ...
                                              ' d = ',num2str(d),'/',num2str(T_d),'.'...
-                                             ' Round:' num2str(r),'/',num2str(T_rounds(b)),'.'...
+                                             ' Round:' num2str(r),'/',num2str(T_comps),'.'...
                                              ' bal = ' num2str(bal(b)),' (',num2str(b),'/',num2str(T_bal),').' ];
                                     disp(texto)
                                     [R(:,pi,it_max,zi,rri,d,r),~,~,~,time(:,pi,it_max,zi,rri,d,r)] = MSD_actions(trajectories,...
